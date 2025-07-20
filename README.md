@@ -32,8 +32,6 @@ It started as a python project (the files are still included in the repo), but i
 - ✅ Randomly selects a meal for each time slot
 - ✅ Creates Google Calendar events with descriptions
 - ✅ Skips events if the time has already passed
-- ✅ Prevents duplicate events
-- 🧪 Supports development mode and forced overwrite
 
 ---
 
@@ -53,7 +51,6 @@ The script:
 1. Loads all columns from the sheet
 2. Matches each time slot with a fixed calendar time (e.g. 07:30 for "Сутрин")
 3. Skips if the time has already passed today
-4. Skips if an event already exists for that time slot
-5. Creates a new event with a randomly selected meal
+4. Creates a new event with a randomly selected meal
 
 ---
