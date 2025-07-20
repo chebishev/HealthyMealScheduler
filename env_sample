@@ -1,0 +1,4 @@
+SHEET_NAME=Healthy_Meal_Scheduler
+CREDENTIALS_FILE=credentials.json
+SERVICE_ACCOUNT_FILE=service_account.json
+CALENDAR_API_SCOPES=["https://www.googleapis.com/auth/calendar"]
