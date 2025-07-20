@@ -11,6 +11,7 @@ function deleteEventsByTitle() {
   ];
 
   const now = new Date();
+  // Set the future date to one day later
   const future = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
 
   const events = calendar.getEvents(now, future);
