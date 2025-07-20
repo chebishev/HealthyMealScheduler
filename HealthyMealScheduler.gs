@@ -1,4 +1,4 @@
-function createHealthyMealsCalendarEvents() {
+function createHealthyMealsCalendarEvents(silent = false) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
@@ -52,8 +52,20 @@ function createHealthyMealsCalendarEvents() {
       });
     }
   }
+  if (!silent){
   // Notify user that events for the rest of the day have been added
   SpreadsheetApp.getUi().alert("Събитията за оставащата част от деня са добавени в календара!");
+  }
+}
+
+// Manual version (for menu)
+function createHealthyMealsCalendarEventsWithUI() {
+  createHealthyMealsCalendarEvents(false);  // show alert
+}
+
+// Time-driven version
+function scheduledCreateHealthyMealsCalendarEvents() {
+  createHealthyMealsCalendarEvents(true);   // no alert
 }
 
 function onOpen() {
@@ -61,6 +73,6 @@ function onOpen() {
     // Add a custom menu to the spreadsheet
     .createMenu('Меню за храна')
     // Add a menu item to trigger the event creation
-    .addItem('📆 Генерирай меню в календара', 'createHealthyMealsCalendarEvents')
+    .addItem('📆 Генерирай меню в календара', 'createHealthyMealsCalendarEventsWithUI')
     .addToUi();
 }

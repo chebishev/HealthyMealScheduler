@@ -54,3 +54,4 @@ The script:
 4. Creates a new event with a randomly selected meal
 
 ---
+### if you are on the App Script page, you can test and run the code from scheduledCreateHealthyMealsCalendarEvents
