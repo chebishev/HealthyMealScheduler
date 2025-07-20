@@ -5,11 +5,17 @@ function createHealthyMealsCalendarEvents() {
 
   // map the column headers to specific meal times
   const timeMap = {
+    // morning (breakfast)
     "Сутрин 7:00 - 9:00": { hour: 7, minute: 30 },
+    // second breakfast
     "Междинна закуска 10:30 - 11:30": { hour: 10, minute: 45 },
+    // lunch
     "Обяд 13:00 - 14:00": { hour: 13, minute: 0 },
+    // afternoon snack
     "Следобедна закуска 16:00 - 17:00": { hour: 16, minute: 0 },
+    // dinner
     "Вечеря 19:00 - 20:00": { hour: 19, minute: 0 },
+    // before bed
     "Преди лягане 21:30 - 22:00": { hour: 21, minute: 45 }
   };
 
@@ -46,7 +52,7 @@ function createHealthyMealsCalendarEvents() {
       });
     }
   }
-  // Notify user that events have been added
+  // Notify user that events for the rest of the day have been added
   SpreadsheetApp.getUi().alert("Събитията за оставащата част от деня са добавени в календара!");
 }
 
