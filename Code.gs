@@ -3,6 +3,7 @@ function createHealthyMealsCalendarEvents() {
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
 
+  // map the column headers to specific meal times
   const timeMap = {
     "Сутрин 7:00 - 9:00": { hour: 7, minute: 30 },
     "Междинна закуска 10:30 - 11:30": { hour: 10, minute: 45 },
@@ -45,13 +46,15 @@ function createHealthyMealsCalendarEvents() {
       });
     }
   }
-
+  // Notify user that events have been added
   SpreadsheetApp.getUi().alert("Събитията за оставащата част от деня са добавени в календара!");
 }
 
 function onOpen() {
   SpreadsheetApp.getUi()
+    // Add a custom menu to the spreadsheet
     .createMenu('Меню за храна')
+    // Add a menu item to trigger the event creation
     .addItem('📆 Генерирай меню в календара', 'createHealthyMealsCalendarEvents')
     .addToUi();
 }

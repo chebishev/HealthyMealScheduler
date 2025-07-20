@@ -6,6 +6,22 @@ This project automates your daily healthy eating routine by:
 - Creating Google Calendar events for those meals
 - Skipping past time slots and already-scheduled events
 
+---
+
+## 📂 Directory Structure
+It started as a python project (the files are still included in the repo), but it was easier to migrate to Google Apps Script, because the Excel file was already a Google Sheet.
+.
+├── HealthyMealScheduler.gs     # Apps Script code (the one we only use now)
+├── BatchCalendarDeletion.gs    # Bonus for batch calendar deletion
+├── config.py                   # Reads settings from .env using pydantic
+├── healthy_meal_scheduler.py   # Main entry point
+├── .env                        # Sheet name, .json files for the google APIs, Scopes (env_sample provided)
+├── read_google_sheet.py        # get the columns from the sheet using pandas and gspread
+├── requirements.txt            # Python dependencies
+└── pyproject.toml              # settings for black and isort
+
+!! You need to activate Google APIs for Calendar, Drive and Spreadsheet !!
+---
 > 📅 All powered by Google Apps Script – no servers, no external Python needed.
 
 ---
