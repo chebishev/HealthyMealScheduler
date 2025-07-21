@@ -1,41 +1,58 @@
+const MEAL_EVENTS = [
+  { label: "Сутрин 7:00 - 9:00", hour: 7, minute: 30 },
+  { label: "Междинна закуска 10:30 - 11:30", hour: 10, minute: 45 },
+  { label: "Обяд 13:00 - 14:00", hour: 13, minute: 0 },
+  { label: "Следобедна закуска 16:00 - 17:00", hour: 16, minute: 0 },
+  { label: "Вечеря 19:00 - 20:00", hour: 19, minute: 0 },
+  { label: "Преди лягане 21:30 - 22:00", hour: 21, minute: 45 }
+];
+
+function getEventsFromDayRange(startOffset, endOffset) {
+  const start = new Date();
+  start.setDate(start.getDate() + startOffset);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date();
+  end.setDate(end.getDate() + endOffset);
+  end.setHours(23, 59, 59, 999);
+
+  return CalendarApp.getDefaultCalendar().getEvents(start, end);
+}
+
+function deleteOldMealEvents() {
+  const titlesToDelete = MEAL_EVENTS.map(event => `🍽️ ${event.label}`);
+  const events = getEventsFromDayRange(0, 0);
+  let count = 0;
+
+  events.forEach(event => {
+    if (titlesToDelete.includes(event.getTitle())) {
+      event.deleteEvent();
+      count++;
+    }
+  });
+
+  Logger.log(`${count} old meal events deleted.`);
+}
+
 function createHealthyMealsCalendarEvents(silent = false) {
+  const calendar = CalendarApp.getDefaultCalendar();
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
 
-  // map the column headers to specific meal times
-  const timeMap = {
-    // morning (breakfast)
-    "Сутрин 7:00 - 9:00": { hour: 7, minute: 30 },
-    // second breakfast
-    "Междинна закуска 10:30 - 11:30": { hour: 10, minute: 45 },
-    // lunch
-    "Обяд 13:00 - 14:00": { hour: 13, minute: 0 },
-    // afternoon snack
-    "Следобедна закуска 16:00 - 17:00": { hour: 16, minute: 0 },
-    // dinner
-    "Вечеря 19:00 - 20:00": { hour: 19, minute: 0 },
-    // before bed
-    "Преди лягане 21:30 - 22:00": { hour: 21, minute: 45 }
-  };
-
-  const calendar = CalendarApp.getDefaultCalendar();
-  const now = new Date(); // current time
+  const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
   const date = now.getDate();
 
-  for (let col = 0; col < headers.length; col++) {
-    const header = headers[col];
-    if (!timeMap[header]) continue;
+  for (let meal of MEAL_EVENTS) {
+    const col = headers.indexOf(meal.label);
+    if (col === -1) continue;
 
-    const { hour, minute } = timeMap[header];
-    const eventStart = new Date(year, month, date, hour, minute);
-
-    // Skip if time already passed
+    const eventStart = new Date(year, month, date, meal.hour, meal.minute);
     if (eventStart < now) continue;
 
-    let options = [];
+    const options = [];
     for (let row = 1; row < data.length; row++) {
       const cell = data[row][col];
       if (cell && typeof cell === "string") {
@@ -47,32 +64,33 @@ function createHealthyMealsCalendarEvents(silent = false) {
       const selected = options[Math.floor(Math.random() * options.length)];
       const eventEnd = new Date(eventStart.getTime() + 30 * 60000);
 
-      calendar.createEvent(`🍽️ ${header}`, eventStart, eventEnd, {
+      calendar.createEvent(`🍽️ ${meal.label}`, eventStart, eventEnd, {
         description: selected
       });
     }
   }
-  if (!silent){
-  // Notify user that events for the rest of the day have been added
-  SpreadsheetApp.getUi().alert("Събитията за оставащата част от деня са добавени в календара!");
+
+  if (!silent) {
+    SpreadsheetApp.getUi().alert("Събитията за деня са обновени в календара.");
   }
 }
 
-// Manual version (for menu)
-function createHealthyMealsCalendarEventsWithUI() {
-  createHealthyMealsCalendarEvents(false);  // show alert
+function refreshHealthyMealCalendar(silent = false) {
+  deleteOldMealEvents();
+  createHealthyMealsCalendarEvents(silent);
 }
 
-// Time-driven version
+function createHealthyMealsCalendarEventsWithUI() {
+  refreshHealthyMealCalendar(false);
+}
+
 function scheduledCreateHealthyMealsCalendarEvents() {
-  createHealthyMealsCalendarEvents(true);   // no alert
+  refreshHealthyMealCalendar(true);
 }
 
 function onOpen() {
   SpreadsheetApp.getUi()
-    // Add a custom menu to the spreadsheet
     .createMenu('Меню за храна')
-    // Add a menu item to trigger the event creation
     .addItem('📆 Генерирай меню в календара', 'createHealthyMealsCalendarEventsWithUI')
     .addToUi();
 }
