@@ -9,8 +9,9 @@ This project automates your daily healthy eating routine by:
 
 ---
 
-## 📂 Directory Structure
+## 📂 Directory Structure \
 It started as a python project (the files are still included in the repo), but it was easier to migrate to Google Apps Script, because the Excel file was already a Google Sheet.
+```bash
 .
 ├── HealthyMealScheduler.gs     # Apps Script code (the one we only use now)
 ├── config.py                   # Reads settings from .env using pydantic
@@ -19,7 +20,7 @@ It started as a python project (the files are still included in the repo), but i
 ├── read_google_sheet.py        # get the columns from the sheet using pandas and gspread
 ├── requirements.txt            # Python dependencies
 └── pyproject.toml              # settings for black and isort
-
+```
 !! You need to activate Google APIs for Calendar, Drive and Spreadsheet !!
 ---
 > 📅 All powered by Google Apps Script – no servers, no external Python needed.
