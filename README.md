@@ -9,7 +9,7 @@ This project automates your daily healthy eating routine by:
 
 ---
 
-## 📂 Directory Structure \
+## 📂 Directory Structure
 It started as a python project (the files are still included in the repo), but it was easier to migrate to Google Apps Script, because the Excel file was already a Google Sheet.
 ```bash
 .
