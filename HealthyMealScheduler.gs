@@ -21,7 +21,7 @@ function getEventsFromDayRange(startOffset, endOffset) {
 
 function deleteOldMealEvents() {
   const titlesToDelete = MEAL_EVENTS.map(event => `🍽️ ${event.label}`);
-  const events = getEventsFromDayRange(0, 0);
+  const events = getEventsFromDayRange(-1, -1); // Get events from the previous day
   let count = 0;
 
   events.forEach(event => {
@@ -85,6 +85,7 @@ function createHealthyMealsCalendarEventsWithUI() {
 }
 
 function scheduledCreateHealthyMealsCalendarEvents() {
+  deleteOldMealEvents();
   refreshHealthyMealCalendar(true);
 }
 
