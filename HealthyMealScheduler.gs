@@ -85,6 +85,7 @@ function refreshHealthyMealCalendar(silent = false) {
 }
 
 function createHealthyMealsCalendarEventsWithUI() {
+  deleteOldMealEvents();
   refreshHealthyMealCalendar(false);
 }
 
