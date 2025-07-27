@@ -4,6 +4,23 @@ function createHealthyMealsCalendarEvents(silent = false) {
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
 
+  // Get Properties service
+  const props = PropertiesService.getScriptProperties();
+  const lastUsedRowStr = props.getProperty("lastUsedRowIndex");
+  const dataRowStart = 1; // Skip headers
+
+  const maxDataRow = data.length - 1; // Last usable row index
+  let nextRow = dataRowStart;
+
+  if (lastUsedRowStr !== null) {
+    const lastUsed = parseInt(lastUsedRowStr, 10);
+    if (lastUsed >= maxDataRow) {
+      nextRow = dataRowStart; // Wrap around
+    } else {
+      nextRow = lastUsed + 1;
+    }
+  }
+
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -16,23 +33,18 @@ function createHealthyMealsCalendarEvents(silent = false) {
     const eventStart = new Date(year, month, date, meal.hour, meal.minute);
     if (eventStart < now) continue;
 
-    const options = [];
-    for (let row = 1; row < data.length; row++) {
-      const cell = data[row][col];
-      if (cell && typeof cell === "string") {
-        options.push(cell.trim());
-      }
-    }
+    const cell = data[nextRow][col];
+    if (!cell || typeof cell !== "string") continue;
 
-    if (options.length > 0) {
-      const selected = options[Math.floor(Math.random() * options.length)];
-      const eventEnd = new Date(eventStart.getTime() + 30 * 60000);
+    const eventEnd = new Date(eventStart.getTime() + 30 * 60000);
 
-      calendar.createEvent(`🍽️ ${meal.label}`, eventStart, eventEnd, {
-        description: selected
-      });
-    }
+    calendar.createEvent(`🍽️ ${meal.label}`, eventStart, eventEnd, {
+      description: cell.trim()
+    });
   }
+
+  // Save nextRow index for future use
+  props.setProperty("lastUsedRowIndex", nextRow.toString());
 
   if (!silent) {
     SpreadsheetApp.getUi().alert("Събитията за деня са обновени в календара.");
